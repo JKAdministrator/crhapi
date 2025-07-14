@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { usersController } from "../controllers/users";
+import { testController } from "../controllers/test";
 import { asyncHandler } from "../middlewares/asyncHandler";
 const router = Router();
 
-router.get("/:id",      asyncHandler(usersController.getUser));
+router.get("",      asyncHandler(testController.getTest));
 //router.patch("/:id",    asyncHandler(usersController.patchUser));
 //router.put("",      asyncHandler(usersController.putUser));
 //router.delete("/:id",   asyncHandler(usersController.deleteUser));

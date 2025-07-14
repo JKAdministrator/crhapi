@@ -7,6 +7,7 @@ import cors from 'cors';
 //import { auth } from "./auth";
 //import { toNodeHandler } from "better-auth/node";
 import { default as usersRouter } from './routes/users';
+import { default as testRouter } from './routes/test';
 import { errorHandler } from "./middlewares/errorHandler";
 
 
@@ -14,7 +15,7 @@ const PORT = process.env.PORT ?? 3000;
 const APP = express();
 const isProduction = process.env.NODE_ENV === "production";
 //APP.use();
-
+/*
 APP.use((req, res, next) => {
   const originalSend = res.send;
   res.send = function (body) {
@@ -23,6 +24,7 @@ APP.use((req, res, next) => {
   };
   next();
 });
+*/
 
 
 
@@ -53,6 +55,7 @@ APP.use(cors(corsOptions));
 //APP.all("/api/auth/*"                 ,toNodeHandler(auth));
 //APP.use("/api/v1/test"                ,express.json(), testRouter);
 APP.use("/api/v1/users"               ,express.json(), verifySession as unknown as express.RequestHandler, usersRouter);
+APP.use("/api/v1/test", express.json(), testRouter);
 APP.use(errorHandler);
 
 
@@ -74,13 +77,13 @@ APP.listen(PORT, (err?: Error) => {
   }
 
   try {
-    (db as DB).connect();
-    console.log(`Server up: http://localhost:${PORT} with env ${process.env.NODE_ENV}`);
-    console.log(`CORS origin ${process.env.WEBCLIENT_CORS_ORIGIN}`);
-    console.log(`Database connected: ${process.env.PG_HOST} with user ${process.env.PG_USER}`);
-    console.log(`Database name: ${process.env.PG_DATABASE}`);
-    console.log(`Database port: ${process.env.PG_PORT}`);
-    console.log("CORS origin en runtime:", process.env.WEBCLIENT_CORS_ORIGIN);
+    //(db as DB).connect();
+    //console.log(`Server up: http://localhost:${PORT} with env ${process.env.NODE_ENV}`);
+    //console.log(`CORS origin ${process.env.WEBCLIENT_CORS_ORIGIN}`);
+    //console.log(`Database connected: ${process.env.PG_HOST} with user ${process.env.PG_USER}`);
+    //console.log(`Database name: ${process.env.PG_DATABASE}`);
+    //console.log(`Database port: ${process.env.PG_PORT}`);
+    //console.log("CORS origin en runtime:", process.env.WEBCLIENT_CORS_ORIGIN);
   } catch (e: unknown) {
     console.error('Error connecting to database', e);
     process.exit(1);

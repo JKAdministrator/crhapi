@@ -8,7 +8,13 @@ import createErrorDocument, { ERROR_DOCUMENT } from "../../utils/problemDocument
 const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const r: ResponseData                                           = {};
 
-    const {authUserId:userId, name:authUsername, email:authEmail}   = (req as ExtendedRequest).session
+    const userId = req.params.id;
+    if (!userId) {
+        const errorDocument = createErrorDocument(ERROR_DOCUMENT.BAD_REQUEST, { userId }, null, 'User ID is required');
+        res.status(errorDocument.status).send(errorDocument);
+        return;
+    }
+    const {authUserId:userIdAuth, name:authUsername, email:authEmail}   = (req as ExtendedRequest).session
     const dbPool                                                    = db.connectionPool;
 
     try {

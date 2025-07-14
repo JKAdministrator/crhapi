@@ -23,10 +23,11 @@ class Database implements DatabaseConnection {
 */
 
     private _sqlConfig = {
-        user: process.env.DB_USER,
-        password: process.env.DB_PWD,
-        database: process.env.DB_NAME,
-        server: 'localhost',
+        user: process.env.DB_CORHOMA_USER ?? '',
+        password: process.env.DB_CORHOMA_PASSWORD ?? '',
+        database: process.env.DB_CORHOMA_NAME ?? '',
+        server: process.env.DB_CORHOMA_HOST ?? '',
+        port: parseInt(process.env.DB_CORHOMA_PORT || '1433', 10),
         pool: {
             max: 10,
             min: 1,
@@ -45,7 +46,7 @@ class Database implements DatabaseConnection {
     }
 
     async connect() {
-        this._connectionPool = await sql.connect(this._sqlConfig);
+        this._connectionPool = await new sql.ConnectionPool(this._sqlConfig).connect();
     }
 
     get connectionPool() {
