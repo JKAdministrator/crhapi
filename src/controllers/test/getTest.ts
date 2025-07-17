@@ -1,9 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import db from "../../config/db"; 
-import { ExtendedRequest } from "../../middlewares/verifySession";
 import ResponseData from "../types";
-import mssql from "mssql";
-import createErrorDocument, { ERROR_DOCUMENT } from "../../utils/problemDocument";
 
 const getTest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const r: ResponseData                                           = {};
@@ -14,7 +10,9 @@ const getTest = async (req: Request, res: Response, next: NextFunction): Promise
         res.status(errorDocument.status).send(errorDocument);
         return;
     }
-        */
+    */
+   
+
     res.status(200).send(r);
     return;
 };

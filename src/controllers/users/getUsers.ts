@@ -1,30 +1,31 @@
 import { Request, Response, NextFunction } from "express";
-import db from "../../config/db"; 
-import { ExtendedRequest } from "../../middlewares/verifySession";
 import ResponseData from "../types";
-import mssql from "mssql";
-import createErrorDocument, { ERROR_DOCUMENT } from "../../utils/problemDocument";
+import usersDB from "../auth/usersDB";
 
 const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+
     const r: ResponseData                                           = {};
-
-    const {authUserId:userId, name:authUsername, email:authEmail}   = (req as ExtendedRequest).session
-    const dbPool                                                    = db.connectionPool;
-
-    try {
-
-        const userData = await dbPool.request()
-            .query('select name, lastname, email from users');
-
-        r.rows = userData.recordset;
-    } catch (error) {
-        throw error;
-    } finally {
-        dbPool.close();
+``
+        // obtenemos el id de query params del request
+    const userId = req.query.id as string;
+    
+    // si hay un id obtengo solo ese usuario, si no se pasa un id obtengo todos los usuarios
+    if (userId) {
+        const user = usersDB.find(u => String(u.id) === userId);
+        if (!user) {
+            r.rows = [];
+        } else {
+            r.rows = [user];
+        }
+        res.status(200).send(r);
+        return;
     }
 
+  // Devolver información del usuario logueado
+    r.rows = usersDB;
     res.status(200).send(r);
     return;
+
 };
 
 export default getUsers;

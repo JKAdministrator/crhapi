@@ -1,5 +1,6 @@
 import express from "express";
 import helmet from 'helmet';
+import session from 'express-session';
 import db from './config/db';
 import rateLimiterConfig from './config/rateLimiterConfig';
 import { verifySession } from "./middlewares/verifySession";
@@ -8,6 +9,7 @@ import cors from 'cors';
 //import { toNodeHandler } from "better-auth/node";
 import { default as usersRouter } from './routes/users';
 import { default as testRouter } from './routes/test';
+import { default as authRouter } from './routes/auth';
 import { errorHandler } from "./middlewares/errorHandler";
 
 
@@ -52,10 +54,25 @@ if (isProduction) {
 
 
 APP.use(cors(corsOptions));
+
+// Configuración de express-session
+APP.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Cambiar a true en producción con HTTPS
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 horas
+  }
+}));
+
 //APP.all("/api/auth/*"                 ,toNodeHandler(auth));
 //APP.use("/api/v1/test"                ,express.json(), testRouter);
 APP.use("/api/v1/users"               ,express.json(), verifySession as unknown as express.RequestHandler, usersRouter);
 APP.use("/api/v1/test", express.json(), testRouter);
+APP.use("/api/v1/users", express.json(), verifySession as unknown as express.RequestHandler, usersRouter);
+APP.use("/api/v1/auth", express.json(), authRouter);
 APP.use(errorHandler);
 
 

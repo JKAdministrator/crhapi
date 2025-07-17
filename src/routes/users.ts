@@ -3,9 +3,6 @@ import { usersController } from "../controllers/users";
 import { asyncHandler } from "../middlewares/asyncHandler";
 const router = Router();
 
-router.get("/:id",      asyncHandler(usersController.getUser));
-//router.patch("/:id",    asyncHandler(usersController.patchUser));
-//router.put("",      asyncHandler(usersController.putUser));
-//router.delete("/:id",   asyncHandler(usersController.deleteUser));
+router.get("",      asyncHandler(usersController.getUsers));
 
 export default router;
